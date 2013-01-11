@@ -420,7 +420,7 @@ void display_altitude(u8 line, u8 update)
 		display_chars(LCD_SEG_L1_3_0, (u8*)"ALT ", SEG_ON);
 #endif
 #ifdef CONFIG_METRIC_ONLY
-			display_symbol(LCD_UNIT_L1_M, SEG_ON);
+//			display_symbol(LCD_UNIT_L1_M, SEG_ON);
 #else		
 		if (sys.flag.use_metric_units)
 		{
@@ -446,15 +446,15 @@ void display_altitude(u8 line, u8 update)
 			{
 #endif
 				// Display altitude in xxxx m format, allow 3 leading blank digits
-				if (sAlt.altitude >= 0)
+				if (1) // (sAlt.pressure > 0)
 				{
 #ifdef CONFIG_ALTI_ACCUMULATOR
 					str = itoa(sAlt.altitude, 5, 4);
 #else
-					str = itoa(sAlt.altitude, 4, 3);
+					str = itoa(sAlt.pressure/100, 4, 3);
 #endif
 					display_symbol(LCD_SYMB_ARROW_UP, SEG_ON);
-					display_symbol(LCD_SYMB_ARROW_DOWN, SEG_OFF);
+					display_symbol(LCD_SYMB_ARROW_DOWN, SEG_ON);
 				}
 				else
 				{
