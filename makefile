@@ -56,13 +56,17 @@ ifeq (debug,$(findstring debug,$(MAKECMDGOALS)))
 USE_CFLAGS = $(CFLAGS_DEBUG)
 endif
 
-main: build config.h even_in_range $(ALL_O) $(EXTRA_O) build
-	@echo $(findstring debug,$(MAKEFLAGS))
-	@echo "Compiling $@ for $(CPU)..."
-	$(CC) $(CC_CMACH) $(CFLAGS_PRODUCTION) -o $(BUILD_DIR)/eZChronos.elf $(ALL_O) $(EXTRA_O)
+all: build/eZChronos.elf
+
+build/eZChronos.txt: build/eZChronos.elf
 	@echo "Convert to TI Hex file"
 	$(PYTHON) tools/memory.py -i build/eZChronos.elf -o build/eZChronos.txt
 
+build/eZChronos.elf: build config.h even_in_range $(ALL_O) $(EXTRA_O) build
+	@echo $(findstring debug,$(MAKEFLAGS))
+	@echo "Compiling $@ for $(CPU)..."
+	$(CC) $(CC_CMACH) $(CFLAGS_PRODUCTION) -o $(BUILD_DIR)/eZChronos.elf $(ALL_O) $(EXTRA_O)
+	
 #debug:	foo
 #	@echo USE_CFLAGS = $(CFLAGS_DEBUG)
 #	call call_debug
