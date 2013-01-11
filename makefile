@@ -119,7 +119,7 @@ config:
 
 help:
 	@echo "Valid targets are"
-	@echo "    main"
+	@echo "    all"
 	@echo "    debug"
 	@echo "    clean"
 	@echo "    debug_asm"
