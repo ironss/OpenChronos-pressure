@@ -58,14 +58,15 @@ endif
 
 all: build/eZChronos.elf
 
-build/eZChronos.txt: build/eZChronos.elf
+$(BUILD_DIR)/eZChronos.txt: $(BUILD_DIR)/eZChronos.elf
 	@echo "Convert to TI Hex file"
-	$(PYTHON) tools/memory.py -i build/eZChronos.elf -o build/eZChronos.txt
+	$(PYTHON) tools/memory.py -i $< -o $@
 
-build/eZChronos.elf: build config.h even_in_range $(ALL_O) $(EXTRA_O) build
+$(BUILD_DIR)/eZChronos.elf: config.h even_in_range.o $(ALL_O) $(EXTRA_O)
 	@echo $(findstring debug,$(MAKEFLAGS))
 	@echo "Compiling $@ for $(CPU)..."
-	$(CC) $(CC_CMACH) $(CFLAGS_PRODUCTION) -o $(BUILD_DIR)/eZChronos.elf $(ALL_O) $(EXTRA_O)
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CC_CMACH) $(CFLAGS_PRODUCTION) -o $@ $(ALL_O) $(EXTRA_O)
 	
 #debug:	foo
 #	@echo USE_CFLAGS = $(CFLAGS_DEBUG)
@@ -84,7 +85,7 @@ $(ALL_S): %.s: %.o config.h include/project.h
 #             $(CC) -c $(CFLAGS) $< -o $@
 
 
-debug:	build even_in_range $(ALL_O)
+debug: even_in_range.o $(ALL_O)
 	@echo "Compiling $@ for $(CPU) in debug"
 	$(CC) $(CC_CMACH) $(CFLAGS_DEBUG) -o $(BUILD_DIR)/eZChronos.dbg.elf $(ALL_O) $(EXTRA_O)
 	@echo "Convert to TI Hex file"
@@ -99,7 +100,7 @@ source_index: $(ALL_S)
 etags: $(ALL_C) 
 	etags $^
 
-even_in_range:
+even_in_range.o:
 	@echo "Assembling $@ in one step for $(CPU)..."
 	$(CC) -D_GNU_ASSEMBLER_ -x assembler-with-cpp -c even_in_range.s -o even_in_range.o
 
@@ -107,9 +108,6 @@ clean:
 	@echo "Removing files..."
 	rm -f $(ALL_O)
 	rm -rf build/*
-
-build:
-	mkdir -p build
 
 config.h:
 	$(PYTHON) tools/config.py
