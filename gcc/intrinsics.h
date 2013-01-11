@@ -1,6 +1,7 @@
 #ifndef __INTRINSICS_H
 #define __INTRINSICS_H
 
+#include <stdint.h>
 #include <signal.h>
 
 typedef unsigned short istate_t;
