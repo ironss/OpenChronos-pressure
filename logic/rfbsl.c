@@ -65,6 +65,7 @@ u8 locked = 1;
 // Extern section
 extern void menu_skip_next(line_t line); //ezchronos.c
 
+#ifdef CONFIG_RFBSL
 
 // *************************************************************************************************
 // @fn          mx_rfbsl
@@ -189,3 +190,5 @@ void display_discret_rfbsl(u8 line, u8 update)
 	}
 }
 #endif
+#endif
+

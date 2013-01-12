@@ -318,7 +318,7 @@ const struct menu menu_L2_Eggtimer =
 #ifdef CONFIG_BATTERY
 const struct menu menu_L2_Battery =
 {
-	#ifdef CONFIG_USE_DISCRET_RFBSL
+	#if defined(CONFIG_RFBSL) && defined(CONFIG_USE_DISCRET_RFBSL)
 	FUNCTION(sx_rfbsl), // sub menu function
 	FUNCTION(mx_rfbsl), // direct function
 	FUNCTION(nx_rfbsl), // next item function
@@ -394,6 +394,7 @@ const struct menu menu_L2_CalDist =
 
 // Include independent RFBSL menu if battery menu disabled, or if user didn't
 // want the hidden RFBSL menu
+#ifdef CONFIG_RFBSL
 #if !defined(CONFIG_BATTERY) || !defined(CONFIG_USE_DISCRET_RFBSL)
 // Line2 - RFBSL
 const struct menu menu_L2_RFBSL =
@@ -404,6 +405,7 @@ const struct menu menu_L2_RFBSL =
 	FUNCTION(display_rfbsl),		// display function
 	FUNCTION(update_time),			// new display data
 };
+#endif
 #endif
 
 #ifdef CONFIG_PROUT
