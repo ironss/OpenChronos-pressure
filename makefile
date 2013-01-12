@@ -114,7 +114,7 @@ config:
 
 prog: $(BUILD_DIR)/eZChronos.elf
 	mspdebug rf2500 "prog $(BUILD_DIR)/eZChronos.elf"
-	touch prog
+	touch $@
 
 help:
 	@echo "Valid targets are"
