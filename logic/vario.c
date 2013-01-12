@@ -74,8 +74,8 @@
 #define VARIO_ALT_PA 0 /*  32 bytes - display vario in Pascal */
 #define VARIO_PA     1 /*  30 bytes - display pressure in hPa */
 #define VARIO_VZ     1 /* 110 bytes - display Vz min/ max     */
-#define VARIO_ALTMAX 1 /*  64 bytes - display max altitude    */
-#define VARIO_F_TIME 1 /* 216 bytes - display flight time     */
+#define VARIO_ALTMAX 0 /*  64 bytes - display max altitude    */
+#define VARIO_F_TIME 0 /* 216 bytes - display flight time     */
 //
 // Global struct with all our variables.
 //
