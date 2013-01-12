@@ -66,6 +66,9 @@ $(BUILD_DIR)/eZChronos.elf: config.h $(ALL_O)
 	mkdir -p $(BUILD_DIR)
 	$(CC) $(CC_CMACH) $(CFLAGS_PRODUCTION) -o $@ $(ALL_O)
 	
+	mkdir -p stats
+	tools/build_stats >> stats/build_stats
+	
 #debug:	foo
 #	@echo USE_CFLAGS = $(CFLAGS_DEBUG)
 #	call call_debug
@@ -123,6 +126,7 @@ help:
 	@echo "    clean"
 	@echo "    debug_asm"
 	@echo "    prog"
+
 #rm *.o $(BUILD_DIR)*
 
 
