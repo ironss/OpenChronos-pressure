@@ -437,8 +437,8 @@ display_vario( u8 line, u8 update )
 
    if ( is_altitude_measurement() )
      {
-	s16 dp;
-	s16 dt;
+	s32 dp;
+	s32 dt;
 
 	if ( vario_p_read( &pressure ) )
 	  {
@@ -474,9 +474,20 @@ display_vario( u8 line, u8 update )
 #if VARIO_MB_HR
 	     time = sTime.system_time;
 	     dt = time - G_vario.mb_hr_prev_time;
-        if ((G_vario.mb_hr_prev_time != 0) && (dt > VARIO_MB_HR_UPDATE_RATE))
+	     if (sTime.system_time == 0)
+	     {
+           G_vario.mb_hr_prev_pa = pressure;
+           G_vario.mb_hr_prev_time = time;
+	     }
+	     
+        if (dt >= VARIO_MB_HR_UPDATE_RATE)
         {
-           G_vario.mb_hr_rate = -dp * 3600 / dt;
+           s32 rate = -dp * 3600 / dt;
+           if (G_vario.mb_hr_rate == 0)
+              G_vario.mb_hr_rate = rate;
+              
+           G_vario.mb_hr_rate = (G_vario.mb_hr_rate*2 + rate*8) / 10;
+
            G_vario.mb_hr_prev_pa = pressure;
            G_vario.mb_hr_prev_time = time;
         }
