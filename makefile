@@ -7,7 +7,7 @@ PYTHON := $(shell which python2 || which python)
 
 PROJ_DIR	=.
 BUILD_DIR = build
-CFLAGS_PRODUCTION = -Os -Wall#-Wl,--gc-sections # -ffunction-sections # -fdata-sections  -fno-inline-functions# -O optimizes
+CFLAGS_PRODUCTION = -Os -Wall -Werror #-Wl,--gc-sections # -ffunction-sections # -fdata-sections  -fno-inline-functions# -O optimizes
 # more optimizion flags
 CFLAGS_PRODUCTION +=  -fomit-frame-pointer -fno-force-addr -finline-limit=1 -fno-schedule-insns 
 CFLAGS_PRODUCTION += -Wl,-Map=output.map

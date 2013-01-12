@@ -137,6 +137,7 @@ void WriteSingleReg(unsigned char addr, unsigned char value)
 	while (!(RFDINIFG & RF1AIFCTL1));
 
 	i = RF1ADOUTB;                            // Reset RFDOUTIFG flag which contains status byte
+	i = i;  // Prevent warning
 
 	EXIT_CRITICAL_SECTION(int_state);
 }
