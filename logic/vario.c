@@ -64,6 +64,7 @@
 #include "buzzer.h"
 
 // logic
+#include "clock.h"
 #include "altitude.h"
 #include "vario.h"
 
@@ -72,10 +73,13 @@
 //
 // Vario compile time options, saving space if needed.
 #define VARIO_ALT_PA 0 /*  32 bytes - display vario in Pascal */
+#define VARIO_MB_HR  1 /*           - display mB/hour (hPa/hour) */
 #define VARIO_PA     1 /*  30 bytes - display pressure in hPa */
-#define VARIO_VZ     1 /* 110 bytes - display Vz min/ max     */
+#define VARIO_VZ     0 /* 110 bytes - display Vz min/ max     */
 #define VARIO_ALTMAX 0 /*  64 bytes - display max altitude    */
 #define VARIO_F_TIME 0 /* 216 bytes - display flight time     */
+
+#define VARIO_MB_HR_UPDATE_RATE 1*60
 //
 // Global struct with all our variables.
 //
@@ -86,6 +90,11 @@ struct
    u8 p_valid;    // mutex for pressure field
    u8 view_mode;  // view mode, controlled by "v" key
    u8 beep_mode;  // beeper mode, controlled by "#" key
+#if VARIO_MB_HR
+   s32 mb_hr_rate;
+   s32 mb_hr_prev_time;
+   s32 mb_hr_prev_pa;
+#endif
    struct
      {
 #if VARIO_VZ
@@ -128,6 +137,9 @@ enum
 #endif
 #if VARIO_PA
    VARIO_VIEWMODE_PA,         // Display current pressure
+#endif
+#if VARIO_MB_HR
+   VARIO_VIEWMODE_MB_HR,
 #endif
 #if VARIO_VZ
    VARIO_VIEWMODE_VZMAX,      // Max Vario (positive)
@@ -186,6 +198,9 @@ mx_vario(u8 line)
       case VARIO_VIEWMODE_ALT_M:
 #if VARIO_ALT_PA
       case VARIO_VIEWMODE_ALT_PA:
+#endif
+#if VARIO_MB_HR
+      case VARIO_VIEWMODE_MB_HR:
 #endif
 	G_vario.beep_mode++;
 	G_vario.beep_mode %= VARIO_BEEPMODE_MAX;
@@ -361,6 +376,7 @@ display_vario( u8 line, u8 update )
    static u8 _vbeat; // heartbeat
 
    u32 pressure;
+   u32 time;
 
    switch( update )
      {
@@ -421,7 +437,8 @@ display_vario( u8 line, u8 update )
 
    if ( is_altitude_measurement() )
      {
-	s16 diff;
+	s16 dp;
+	s16 dt;
 
 	if ( vario_p_read( &pressure ) )
 	  {
@@ -435,7 +452,7 @@ display_vario( u8 line, u8 update )
 	//
 	if ( !_idone  )
 	  {
-	     diff = 0;
+	     dp = 0;
 	     ++_idone;
 	  }
 	else
@@ -445,13 +462,24 @@ display_vario( u8 line, u8 update )
 	     // buzzer. Pressure decreases with altitude, ensure going lower is
 	     // negative.
 	     // 
-	     diff = G_vario.prev_pa - pressure;
+	     dp = G_vario.prev_pa - pressure;
 
 #if VARIO_VZ
 	     // update stats as we may want to see these after the flight.
 
-	     if ( diff > G_vario.stats.vzmax ) G_vario.stats.vzmax = diff;
-	     if ( diff < G_vario.stats.vzmin ) G_vario.stats.vzmin = diff;
+	     if ( dp > G_vario.stats.vzmax ) G_vario.stats.vzmax = dp;
+	     if ( dp < G_vario.stats.vzmin ) G_vario.stats.vzmin = dp;
+#endif
+
+#if VARIO_MB_HR
+	     time = sTime.system_time;
+	     dt = time - G_vario.mb_hr_prev_time;
+        if ((G_vario.mb_hr_prev_time != 0) && (dt > VARIO_MB_HR_UPDATE_RATE))
+        {
+           G_vario.mb_hr_rate = -dp * 3600 / dt;
+           G_vario.mb_hr_prev_pa = pressure;
+           G_vario.mb_hr_prev_time = time;
+        }
 #endif
 
 #if VARIO_ALTMAX
@@ -474,7 +502,7 @@ display_vario( u8 line, u8 update )
 	     //
 	     // convert the difference in Pa to a vertical velocity.
 	     //
-	     _display_signed( _pascal_to_vz( diff ), 1 );
+	     _display_signed( _pascal_to_vz( dp ), 1 );
 	     break;
 
 #if VARIO_ALT_PA
@@ -482,7 +510,7 @@ display_vario( u8 line, u8 update )
 	     //
 	     // display raw difference in Pascal.
 	     //
-	     _display_signed( diff, 0 );
+	     _display_signed( dp, 0 );
 	     break;
 #endif
 #if VARIO_PA
@@ -492,6 +520,11 @@ display_vario( u8 line, u8 update )
 	     //
 	     _display_signed( pressure, 1 );
 	     break;
+#endif
+#if VARIO_MB_HR
+      case VARIO_VIEWMODE_MB_HR:
+         _display_signed( G_vario.mb_hr_rate, 1);
+         break;
 #endif
 #if VARIO_VZ
 	   case VARIO_VIEWMODE_VZMAX:
@@ -529,13 +562,13 @@ display_vario( u8 line, u8 update )
 	switch ( G_vario.beep_mode )
 	  {
 	   case VARIO_BEEPMODE_ASCENT_0:
-	     if ( diff >= 0 ) chirp( diff );
+	     if ( dp >= 0 ) chirp( dp );
 	     break;
 	   case VARIO_BEEPMODE_ASCENT_1:
-	     if ( diff > 0 ) chirp( diff );
+	     if ( dp > 0 ) chirp( dp );
 	     break;
 	   case VARIO_BEEPMODE_BOTH:
-	     if ( diff ) chirp( diff );
+	     if ( dp ) chirp( dp );
 	     break;
 	   case VARIO_BEEPMODE_OFF:
 	   case VARIO_BEEPMODE_MAX:
