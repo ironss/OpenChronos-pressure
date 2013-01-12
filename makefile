@@ -100,9 +100,9 @@ source_index: $(ALL_S)
 etags: $(ALL_C) 
 	etags $^
 
-even_in_range.o:
+even_in_range.o: even_in_range.s
 	@echo "Assembling $@ in one step for $(CPU)..."
-	$(CC) -D_GNU_ASSEMBLER_ -x assembler-with-cpp -c even_in_range.s -o even_in_range.o
+	$(CC) -D_GNU_ASSEMBLER_ -x assembler-with-cpp -c $< -o $@
 
 clean: 
 	@echo "Removing files..."
