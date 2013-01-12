@@ -79,10 +79,26 @@ void sx_time(u8 line);
 // *************************************************************************************************
 // Defines section
 
+#ifndef START_HOUR
+#define START_HOUR 4
+#endif
+
+#ifndef START_MINUTE
+#define START_MINUTE 30
+#endif
 
 // *************************************************************************************************
 // Global Variable section
 struct time sTime;
+
+struct time startTime =
+{
+   .hour = START_HOUR,
+   .minute = START_MINUTE,
+   
+	.line1ViewStyle = DISPLAY_DEFAULT_VIEW,
+	.line2ViewStyle = DISPLAY_DEFAULT_VIEW,
+};
 
 // Display values for time format selection
 #if (OPTION_TIME_DISPLAY == CLOCK_DISPLAY_SELECT)
@@ -104,24 +120,7 @@ const u8 selection_Timeformat[][4] =
 // *************************************************************************************************
 void reset_clock(void)
 {
-	// Set global system time to 0
-	sTime.system_time = 0;
-
-	// Set main 24H time to start value
-	sTime.hour   = 4;
-	sTime.minute = 30;
-	sTime.second = 0;
-
-	// Display style of both lines is default (HH:MM)
-	sTime.line1ViewStyle = DISPLAY_DEFAULT_VIEW;
-	sTime.line2ViewStyle = DISPLAY_DEFAULT_VIEW;
-
-	// Reset timeout detection
-	sTime.last_activity 		  = 0;
-	
-	#ifdef CONFIG_SIDEREAL
-	sTime.UTCoffset				  =0;
-	#endif
+   sTime = startTime;
 }
 
 

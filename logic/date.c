@@ -73,10 +73,28 @@ void display_date(line_t line, update_t update);
 // *************************************************************************************************
 // Defines section
 
+#ifndef START_YEAR 
+#define START_YEAR 2012
+#endif
+
+#ifndef START_MONTH
+#define START_MONTH 1
+#endif
+
+#ifndef START_DAY
+#define START_DAY 1
+#endif
 
 // *************************************************************************************************
 // Global Variable section
-struct date sDate;	
+struct date sDate;
+
+struct date startDate = 
+{
+   .year = START_YEAR,
+   .month = START_MONTH,
+   .day = START_DAY,
+};
 
 
 // *************************************************************************************************
@@ -92,12 +110,7 @@ struct date sDate;
 void reset_date(void)
 {
 	// Set date 
-	sDate.year  = 2009;
-	sDate.month = 8;
-	sDate.day 	= 1;
-	
-	// Show default display
-	sDate.view = 0;
+	sDate = startDate;
 
     #if (CONFIG_DST > 0)
     dst_calculate_dates();
