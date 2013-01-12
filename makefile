@@ -29,22 +29,22 @@ DRIVER_SOURCE =  driver/adc12.c driver/buzzer.c driver/display.c driver/display1
 
 DRIVER_O = $(addsuffix .o,$(basename $(DRIVER_SOURCE)))
 
-SIMPLICICTI_SOURCE_ODD = simpliciti/Applications/application/End_Device/main_ED_BM.c # changed directory from End Device to End_Device
+SIMPLICITI_SOURCE_ODD = simpliciti/Applications/application/End_Device/main_ED_BM.c # changed directory from End Device to End_Device
 
-SIMPLICICTI_SOURCE = $(SIMPLICICTI_SOURCE_ODD) simpliciti/Components/bsp/bsp.c simpliciti/Components/mrfi/mrfi.c simpliciti/Components/nwk/nwk.c simpliciti/Components/nwk/nwk_api.c simpliciti/Components/nwk/nwk_frame.c simpliciti/Components/nwk/nwk_globals.c simpliciti/Components/nwk/nwk_QMgmt.c simpliciti/Components/nwk_applications/nwk_freq.c simpliciti/Components/nwk_applications/nwk_ioctl.c simpliciti/Components/nwk_applications/nwk_join.c simpliciti/Components/nwk_applications/nwk_link.c simpliciti/Components/nwk_applications/nwk_mgmt.c simpliciti/Components/nwk_applications/nwk_ping.c simpliciti/Components/nwk_applications/nwk_security.c 
+SIMPLICITI_SOURCE = $(SIMPLICITI_SOURCE_ODD) simpliciti/Components/bsp/bsp.c simpliciti/Components/mrfi/mrfi.c simpliciti/Components/nwk/nwk.c simpliciti/Components/nwk/nwk_api.c simpliciti/Components/nwk/nwk_frame.c simpliciti/Components/nwk/nwk_globals.c simpliciti/Components/nwk/nwk_QMgmt.c simpliciti/Components/nwk_applications/nwk_freq.c simpliciti/Components/nwk_applications/nwk_ioctl.c simpliciti/Components/nwk_applications/nwk_join.c simpliciti/Components/nwk_applications/nwk_link.c simpliciti/Components/nwk_applications/nwk_mgmt.c simpliciti/Components/nwk_applications/nwk_ping.c simpliciti/Components/nwk_applications/nwk_security.c 
 
-SIMPLICICTI_O = $(addsuffix .o,$(basename $(SIMPLICICTI_SOURCE)))
+SIMPLICITI_O = $(addsuffix .o,$(basename $(SIMPLICITI_SOURCE)))
 
 MAIN_SOURCE = ezchronos.c
 
 MAIN_O = $(addsuffix .o,$(basename $(MAIN_SOURCE)))
 
-ALL_O = $(LOGIC_O) $(DRIVER_O) $(SIMPLICICTI_O) $(MAIN_O)
+ALL_O = $(LOGIC_O) $(DRIVER_O) $(SIMPLICITI_O) $(MAIN_O)
 
-ALL_S = $(addsuffix .s,$(basename $(LOGIC_SOURCE))) $(addsuffix .s,$(basename $(DRIVER_SOURCE))) $(addsuffix .s,$(basename $(SIMPLICICTI_SOURCE)))  \
+ALL_S = $(addsuffix .s,$(basename $(LOGIC_SOURCE))) $(addsuffix .s,$(basename $(DRIVER_SOURCE))) $(addsuffix .s,$(basename $(SIMPLICITI_SOURCE)))  \
         $(addsuffix .s,$(basename $(MAIN_SOURCE)))  
 
-ALL_C = $(LOGIC_SOURCE) $(DRIVER_SOURCE) $(SIMPLICICTI_SOURCE) $(MAIN_SOURCE)
+ALL_C = $(LOGIC_SOURCE) $(DRIVER_SOURCE) $(SIMPLICITI_SOURCE) $(MAIN_SOURCE)
 
 USE_CFLAGS = $(CFLAGS_PRODUCTION)
 
