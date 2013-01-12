@@ -9,4 +9,4 @@ doc/*.html
 output.map
 prog
 stats
-
+version.c

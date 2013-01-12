@@ -1,0 +1,29 @@
+#! /bin/sh
+
+DATE=$(date +"%Y-%m-%d_%H.%M.%S")
+
+MODS=$(git status -s | wc -l)
+if [ $MODS -ne 0 ] ; then
+   MODS_SUFFIX=-x$MODS
+else
+   MODS_SUFFIX=
+fi
+
+COMMIT=$(git rev-parse HEAD)
+CONFIG=$(md5sum config.h | awk '{ print $1 }')
+
+VERSION=${COMMIT}${MODS_SUFFIX}
+
+(cat << EOF
+/* version.c */
+/* Generated file -- DO NOT EDIT */
+
+const char version[] = "$VERSION";
+const char config[] = "$CONFIG";
+// const char date[] = "$DATE";
+EOF
+) > version.tmp
+
+
+diff version.tmp version.c > /dev/null 2>&1 || mv version.tmp version.c
+

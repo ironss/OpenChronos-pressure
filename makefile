@@ -10,7 +10,7 @@ BUILD_DIR = build
 CFLAGS_PRODUCTION = -Os -Wall -Werror 
 #CFLAGS_PRODUCTION = -ffunction-sections -fdata-sections  -fno-inline-functions
 CFLAGS_PRODUCTION +=  -fomit-frame-pointer -fno-force-addr -finline-limit=1 -fno-schedule-insns 
-CFLAGS_PRODUCTION += -Wl,-Map=$(BUILD_DIR)/eZChronos.map -Wl,--gc-sections 
+CFLAGS_PRODUCTION += -Wl,-Map=$(BUILD_DIR)/eZChronos.map #-Wl,--gc-sections 
 CFLAGS_DEBUG= -g -Os # -g enables debugging symbol table, -O0 for NO optimization
 
 CC_CMACH	= -mmcu=cc430f6137
@@ -35,7 +35,7 @@ SIMPLICITI_SOURCE = $(SIMPLICITI_SOURCE_ODD) simpliciti/Components/bsp/bsp.c sim
 
 SIMPLICITI_O = $(addsuffix .o,$(basename $(SIMPLICITI_SOURCE)))
 
-MAIN_SOURCE = ezchronos.c
+MAIN_SOURCE = ezchronos.c version.c
 
 MAIN_O = $(addsuffix .o,$(basename $(MAIN_SOURCE)))
 
@@ -76,15 +76,19 @@ $(BUILD_DIR)/eZChronos.elf: config.h $(ALL_O)
 #$(ALL_O): config.h project/project.h $(addsuffix .o,$(basename $@))
 #	$(CC) $(CC_COPT) $(USE_CFLAGS) -c $(basename $@).c -o $@
 
-$(ALL_O): %.o: %.c config.h include/project.h
+%.o: %.c config.h include/project.h
 	$(CC) $(CC_COPT) $(USE_CFLAGS) $(CONFIG_FLAGS) -c $< -o $@
-#             $(CC) -c $(CFLAGS) $< -o $@
-
+	rm -f version.c
 
 $(ALL_S): %.s: %.o config.h include/project.h
 	msp430-objdump -D $< > $@
 #             $(CC) -c $(CFLAGS) $< -o $@
 
+version.c:
+	tools/create_version
+
+version.o: version.c
+	$(CC) $(CC_COPT) $(USE_CFLAGS) $(CONFIG_FLAGS) -c $< -o $@
 
 debug: $(ALL_O)
 	@echo "Compiling $@ for $(CPU) in debug"
@@ -105,7 +109,7 @@ clean:
 	@echo "Removing files..."
 	rm -f $(ALL_O)
 	rm -rf build/*
-	rm -rf prog
+	rm -f prog
 
 config.h:
 	$(PYTHON) tools/config.py
