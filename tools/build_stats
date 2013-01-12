@@ -1,0 +1,12 @@
+#! /bin/sh
+
+DATE=$(date +"%Y-%m-%d %H.%M.%S")
+COMMIT=$(git show --format=%H HEAD | head -1)
+
+TEXT_SIZE=$(objdump -h build/eZChronos.elf | awk '/\.text/ { printf "%d", strtonum("0x" $3) }')
+RODATA_SIZE=$(objdump -h build/eZChronos.elf | awk '/\.rodata/ { printf "%d", strtonum("0x" $3) }')
+DATA_SIZE=$(objdump -h build/eZChronos.elf | awk '/\.data/ { printf "%d", strtonum("0x" $3) }')
+BSS_SIZE=$(objdump -h build/eZChronos.elf | awk '/\.bss/ { printf "%d", strtonum("0x" $3) }')
+
+printf "%s\t%s\t%d\t%d\t%d\t%d\n" "$DATE" $COMMIT $TEXT_SIZE $RODATA_SIZE $DATA_SIZE $BSS_SIZE 
+
