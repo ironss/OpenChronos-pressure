@@ -102,6 +102,7 @@ clean:
 	@echo "Removing files..."
 	rm -f $(ALL_O)
 	rm -rf build/*
+	rm -rf prog
 
 config.h:
 	$(PYTHON) tools/config.py
@@ -111,12 +112,17 @@ config:
 	$(PYTHON) tools/config.py
 	git update-index --assume-unchanged config.h 2> /dev/null || true
 
+prog: $(BUILD_DIR)/eZChronos.elf
+	mspdebug rf2500 "prog $(BUILD_DIR)/eZChronos.elf"
+	touch prog
+
 help:
 	@echo "Valid targets are"
 	@echo "    all"
 	@echo "    debug"
 	@echo "    clean"
 	@echo "    debug_asm"
+	@echo "    prog"
 #rm *.o $(BUILD_DIR)*
 
 
