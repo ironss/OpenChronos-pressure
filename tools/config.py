@@ -194,7 +194,6 @@ DATA["CONFIG_STRENGTH"] = {
     "help": "Timer for strength training studios which have you perform repetitions for 90 seconds, e.g. Kieser Training"
 }
 
-# not yet working
 DATA["CONFIG_ALARM"] = {
         "name": "Alarm (608 bytes)",
         "depends": [],
