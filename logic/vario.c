@@ -79,7 +79,7 @@
 #define VARIO_ALTMAX 0 /*  64 bytes - display max altitude    */
 #define VARIO_F_TIME 0 /* 216 bytes - display flight time     */
 
-#define VARIO_MB_HR_UPDATE_RATE 1*60
+#define VARIO_MB_HR_UPDATE_RATE (5*60)
 //
 // Global struct with all our variables.
 //
@@ -486,7 +486,7 @@ display_vario( u8 line, u8 update )
            if (G_vario.mb_hr_rate == 0)
               G_vario.mb_hr_rate = rate;
               
-           G_vario.mb_hr_rate = (G_vario.mb_hr_rate*2 + rate*8) / 10;
+           G_vario.mb_hr_rate = (G_vario.mb_hr_rate*1 + rate*9) / 10;
 
            G_vario.mb_hr_prev_pa = pressure;
            G_vario.mb_hr_prev_time = time;
