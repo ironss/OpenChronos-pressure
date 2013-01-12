@@ -66,8 +66,8 @@ extern void display_alt_accumulator (u8 line, u8 update);
 // *************************************************************************************************
 // Defines section
 
-// Stop altitude measurement after 60 minutes to save battery
-#define ALTITUDE_MEASUREMENT_TIMEOUT	(60*60u)
+// Stop altitude measurement after 120 minutes to save battery
+#define ALTITUDE_MEASUREMENT_TIMEOUT	(120*60u)
 
 
 // *************************************************************************************************
