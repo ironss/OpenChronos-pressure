@@ -64,6 +64,7 @@ struct date
 	u16 year;
 };
 extern struct date sDate;
+extern const struct date startDate;
 
 
 // *************************************************************************************************

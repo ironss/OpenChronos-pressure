@@ -89,7 +89,7 @@ void display_date(line_t line, update_t update);
 // Global Variable section
 struct date sDate;
 
-struct date startDate = 
+const struct date startDate = 
 {
    .year = START_YEAR,
    .month = START_MONTH,

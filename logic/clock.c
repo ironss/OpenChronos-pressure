@@ -91,7 +91,7 @@ void sx_time(u8 line);
 // Global Variable section
 struct time sTime;
 
-struct time startTime =
+const struct time startTime =
 {
    .hour = START_HOUR,
    .minute = START_MINUTE,
