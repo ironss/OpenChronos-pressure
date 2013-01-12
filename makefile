@@ -44,8 +44,6 @@ ALL_O = $(LOGIC_O) $(DRIVER_O) $(SIMPLICICTI_O) $(MAIN_O)
 ALL_S = $(addsuffix .s,$(basename $(LOGIC_SOURCE))) $(addsuffix .s,$(basename $(DRIVER_SOURCE))) $(addsuffix .s,$(basename $(SIMPLICICTI_SOURCE)))  \
         $(addsuffix .s,$(basename $(MAIN_SOURCE)))  
 
-EXTRA_O = even_in_range.o 
-
 ALL_C = $(LOGIC_SOURCE) $(DRIVER_SOURCE) $(SIMPLICICTI_SOURCE) $(MAIN_SOURCE)
 
 USE_CFLAGS = $(CFLAGS_PRODUCTION)
@@ -62,11 +60,11 @@ $(BUILD_DIR)/eZChronos.txt: $(BUILD_DIR)/eZChronos.elf
 	@echo "Convert to TI Hex file"
 	$(PYTHON) tools/memory.py -i $< -o $@
 
-$(BUILD_DIR)/eZChronos.elf: config.h even_in_range.o $(ALL_O) $(EXTRA_O)
+$(BUILD_DIR)/eZChronos.elf: config.h $(ALL_O)
 	@echo $(findstring debug,$(MAKEFLAGS))
 	@echo "Compiling $@ for $(CPU)..."
 	mkdir -p $(BUILD_DIR)
-	$(CC) $(CC_CMACH) $(CFLAGS_PRODUCTION) -o $@ $(ALL_O) $(EXTRA_O)
+	$(CC) $(CC_CMACH) $(CFLAGS_PRODUCTION) -o $@ $(ALL_O)
 	
 #debug:	foo
 #	@echo USE_CFLAGS = $(CFLAGS_DEBUG)
@@ -85,9 +83,9 @@ $(ALL_S): %.s: %.o config.h include/project.h
 #             $(CC) -c $(CFLAGS) $< -o $@
 
 
-debug: even_in_range.o $(ALL_O)
+debug: $(ALL_O)
 	@echo "Compiling $@ for $(CPU) in debug"
-	$(CC) $(CC_CMACH) $(CFLAGS_DEBUG) -o $(BUILD_DIR)/eZChronos.dbg.elf $(ALL_O) $(EXTRA_O)
+	$(CC) $(CC_CMACH) $(CFLAGS_DEBUG) -o $(BUILD_DIR)/eZChronos.dbg.elf $(ALL_O)
 	@echo "Convert to TI Hex file"
 	$(PYTHON) tools/memory.py -i build/eZChronos.dbg.elf -o build/eZChronos.txt
 
@@ -99,10 +97,6 @@ source_index: $(ALL_S)
 
 etags: $(ALL_C) 
 	etags $^
-
-even_in_range.o: even_in_range.s
-	@echo "Assembling $@ in one step for $(CPU)..."
-	$(CC) -D_GNU_ASSEMBLER_ -x assembler-with-cpp -c $< -o $@
 
 clean: 
 	@echo "Removing files..."

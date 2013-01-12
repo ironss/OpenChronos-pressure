@@ -175,7 +175,7 @@ interrupt (ADC12_VECTOR) ADC12ISR (void)
 __interrupt void ADC12ISR (void)
 #endif
 {
-  switch(__even_in_range(ADC12IV,34))
+  switch(ADC12IV)
   {
   case  0: break;                           // Vector  0:  No interrupt
   case  2: break;                           // Vector  2:  ADC overflow
