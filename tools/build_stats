@@ -1,7 +1,7 @@
 #! /bin/sh
 
 DATE=$(date +"%Y-%m-%d %H.%M.%S")
-COMMIT=$(git show --format=%H HEAD | head -1)
+COMMIT=$(git rev-parse HEAD)-x$(git status -s | wc -l)
 
 TEXT_SIZE=$(objdump -h build/eZChronos.elf | awk '/\.text/ { printf "%d", strtonum("0x" $3) }')
 RODATA_SIZE=$(objdump -h build/eZChronos.elf | awk '/\.rodata/ { printf "%d", strtonum("0x" $3) }')
