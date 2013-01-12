@@ -8,3 +8,5 @@ TAGS
 doc/*.html
 output.map
 prog
+stats
+
