@@ -10,7 +10,7 @@ else
 fi
 
 COMMIT=$(git rev-parse HEAD)
-CONFIG=$(md5sum config.h | awk '{ print $1 }')
+CONFIG=$(sha1sum config.h | awk '{ print $1 }')
 
 VERSION=${COMMIT}${MODS_SUFFIX}
 
@@ -19,7 +19,7 @@ VERSION=${COMMIT}${MODS_SUFFIX}
 /* Generated file -- DO NOT EDIT */
 
 const char version[] = "$VERSION";
-const char config[] = "$CONFIG";
+const char config[]  = "$CONFIG";
 // const char date[] = "$DATE";
 EOF
 ) > version.tmp
