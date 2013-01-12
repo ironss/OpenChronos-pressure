@@ -110,7 +110,7 @@ extern const struct menu menu_L2_Phase;
 extern const struct menu menu_L2_Ppt;
 #endif
 
-#ifndef CONFIG_USE_SYNC_TOSET_TIME
+#ifdef CONFIG_USE_SYNC_TOSET_TIME
 extern const struct menu menu_L2_Sync;
 #endif
 

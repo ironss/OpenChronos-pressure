@@ -367,7 +367,7 @@ const struct menu menu_L2_Ppt =
 };
 #endif
 
-#ifndef CONFIG_USE_SYNC_TOSET_TIME
+#ifdef CONFIG_USE_SYNC_TOSET_TIME
 // Line2 - SXNC (synchronization/data download via SimpliciTI)
 const struct menu menu_L2_Sync =
 {
@@ -499,7 +499,7 @@ const struct menu *menu_L2[]={
 	#ifdef CONFIG_USEPPT
 	&menu_L2_Ppt,
 	#endif
-	#ifndef CONFIG_USE_SYNC_TOSET_TIME
+	#ifdef CONFIG_USE_SYNC_TOSET_TIME
 	&menu_L2_Sync,
 	#endif
 	#ifndef ELIMINATE_BLUEROBIN

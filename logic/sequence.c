@@ -11,6 +11,7 @@
 
 // system
 #include "project.h"
+
 #ifdef CONFIG_USE_GPS
 #include <string.h>
 
