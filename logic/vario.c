@@ -57,6 +57,8 @@
 
 #ifdef CONFIG_VARIO
 
+#include <string.h>
+
 // driver
 #include "display.h"
 #include "buzzer.h"

@@ -401,8 +401,6 @@ u8 is_rf(void)
 void simpliciti_get_ed_data_callback(void)
 {
 	static u8 packet_counter = 0;
-    u8 i;
-    u16 res;
 WDTCTL = WDTPW + WDTHOLD;
 #ifdef CONFIG_ACCEL
 	if (sRFsmpl.mode == SIMPLICITI_ACCELERATION)
@@ -496,6 +494,8 @@ WDTCTL = WDTPW + WDTHOLD;
 
 			if ((sPhase.out_nr > SLEEP_OUT_BUFFER-1))
 			{
+             u8 i;
+             u16 res;
 				// Reset counter
 				sPhase.out_nr = 0;
 				res = 0;

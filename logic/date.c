@@ -55,6 +55,11 @@
 #include "sidereal.h"
 #endif
 
+#if (CONFIG_DST > 0)
+#include "dst.h"
+#endif
+
+
 // *************************************************************************************************
 // Prototypes section
 void reset_date(void);
@@ -249,6 +254,7 @@ void mx_date(line_t line)
 						select = 2;
 						break;
 			case 2:		// Set day
+            		max_days = get_numberOfDays(month, year);
 						set_value(&day, 2, 1, 1, max_days, SETVALUE_ROLLOVER_VALUE + SETVALUE_DISPLAY_VALUE + SETVALUE_NEXT_VALUE, LCD_SEG_L2_1_0, display_value1);
 						select = 0;
 						break;
