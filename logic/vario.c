@@ -114,8 +114,8 @@ struct
      } stats;
 } G_vario;
 
-static const int alpha = 20;
-static const int beta = 20;
+static const int alpha = 10;
+static const int beta = 5;
 static const int smoothing_scale = 100;
 
 static const int pressure_scale = 100;
