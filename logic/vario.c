@@ -91,9 +91,9 @@ struct
    u8 view_mode;  // view mode, controlled by "v" key
    u8 beep_mode;  // beeper mode, controlled by "#" key
 #if VARIO_MB_HR
-   s32 mb_hr_rate;
-   s32 mb_hr_prev_time;
    s32 mb_hr_prev_pa;
+   s32 mb_hr_prev_slope;
+   s32 mb_hr_rate;
 #endif
    struct
      {
@@ -114,6 +114,8 @@ struct
      } stats;
 } G_vario;
 
+const int alpha = 10; // / 100 = 0.1
+const int beta = 2;   // / 100 = 0.02
 //
 // Note the beepmode enum changes are reflected in the beepmode symbol.
 // For visual feedback during settings, the beeper2 symbol is turned on
@@ -376,7 +378,8 @@ display_vario( u8 line, u8 update )
    static u8 _vbeat; // heartbeat
 
    u32 pressure;
-   u32 time;
+   s32 smooth_pa;
+   s32 slope;
 
    switch( update )
      {
@@ -438,7 +441,6 @@ display_vario( u8 line, u8 update )
    if ( is_altitude_measurement() )
      {
 	s32 dp;
-	s32 dt;
 
 	if ( vario_p_read( &pressure ) )
 	  {
@@ -472,25 +474,18 @@ display_vario( u8 line, u8 update )
 #endif
 
 #if VARIO_MB_HR
-	     time = sTime.system_time;
-	     dt = time - G_vario.mb_hr_prev_time;
-	     if (sTime.system_time == 0)
+	     if (G_vario.mb_hr_prev_pa == 0)
 	     {
-           G_vario.mb_hr_prev_pa = pressure;
-           G_vario.mb_hr_prev_time = time;
+	        G_vario.mb_hr_prev_pa = pressure * 100;
+	        G_vario.mb_hr_prev_slope = 0;
 	     }
-	     
-        if (dt >= VARIO_MB_HR_UPDATE_RATE)
-        {
-           s32 rate = -dp * 3600 / dt;
-           if (G_vario.mb_hr_rate == 0)
-              G_vario.mb_hr_rate = rate;
-              
-           G_vario.mb_hr_rate = (G_vario.mb_hr_rate*1 + rate*9) / 10;
 
-           G_vario.mb_hr_prev_pa = pressure;
-           G_vario.mb_hr_prev_time = time;
-        }
+        smooth_pa = (alpha * pressure * 100 + (100 - alpha) * (G_vario.mb_hr_prev_pa + G_vario.mb_hr_prev_slope)) / 100;
+        slope = (beta * (smooth_pa - G_vario.mb_hr_prev_pa) + (100 - beta) * G_vario.mb_hr_prev_slope) / 100;
+        
+        G_vario.mb_hr_prev_pa = smooth_pa;
+        G_vario.mb_hr_prev_slope = slope;
+        G_vario.mb_hr_rate = slope * 36 / 10;
 #endif
 
 #if VARIO_ALTMAX
