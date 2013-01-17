@@ -114,11 +114,26 @@ struct
      } stats;
 } G_vario;
 
-static const int alpha = 10;
-static const int beta = 5;
-static const int smoothing_scale = 100;
 
-static const int pressure_scale = 100;
+// Scaling factors and smoothing constants.
+// To avoid int32 overflow, pressure_scale * smoothing_scale must be <= 10000
+// Pressure_scale should be as large as possible to get good resolution on
+// the pressure trend: at  100, steps are 0.36 mB/hour
+//                     at  200, steps are 0.18 mB/hour
+//                     at 1000, steps are 0.036 mB/hour
+// smoothing_scale, alpha and beta can be adjusted to give the smallest value
+// for smoothing scale that still gives appropriate data and trend smooting
+// factors. eg data smoothing factor = 0.1 could be represented with either
+//   alpha = 10, smoothing scale = 100, or
+//   alpha = 1,  smoothing scale = 10.
+// The second options would allow pressure scale to be set to 1000.
+// In practise, however, a data smoothing factor of 0.1 is not sufficient:
+// the pressure data is very noisy.
+
+static const int pressure_scale = 200;
+static const int smoothing_scale = 50;
+static const int alpha = 5;  // Data smoothing factor = alpha/smoothing_scale
+static const int beta = 1;    // Trend smoothing factor = beta/smoothing_scale
 
 //
 // Note the beepmode enum changes are reflected in the beepmode symbol.
