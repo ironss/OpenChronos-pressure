@@ -485,7 +485,7 @@ display_vario( u8 line, u8 update )
         
         G_vario.mb_hr_prev_pa = smooth_pa;
         G_vario.mb_hr_prev_slope = slope;
-        G_vario.mb_hr_rate = slope * 36 / 10;
+        G_vario.mb_hr_rate = slope * 36;
 #endif
 
 #if VARIO_ALTMAX
