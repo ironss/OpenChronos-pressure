@@ -114,8 +114,12 @@ struct
      } stats;
 } G_vario;
 
-const int alpha = 20;  // / 100 = 0.1
-const int beta = 20;   // / 100 = 0.02
+static const int alpha = 20;
+static const int beta = 20;
+static const int smoothing_scale = 100;
+
+static const int pressure_scale = 100;
+
 //
 // Note the beepmode enum changes are reflected in the beepmode symbol.
 // For visual feedback during settings, the beeper2 symbol is turned on
@@ -476,16 +480,16 @@ display_vario( u8 line, u8 update )
 #if VARIO_MB_HR
 	     if (G_vario.mb_hr_prev_pa == 0)
 	     {
-	        G_vario.mb_hr_prev_pa = pressure * 100;
+	        G_vario.mb_hr_prev_pa = pressure * pressure_scale;
 	        G_vario.mb_hr_prev_slope = 0;
 	     }
 
-        smooth_pa = (alpha * pressure * 100 + (100 - alpha) * (G_vario.mb_hr_prev_pa + G_vario.mb_hr_prev_slope)) / 100;
-        slope = (beta * (smooth_pa - G_vario.mb_hr_prev_pa) + (100 - beta) * G_vario.mb_hr_prev_slope) / 100;
+        smooth_pa = (alpha * pressure * pressure_scale + (smoothing_scale - alpha) * (G_vario.mb_hr_prev_pa + G_vario.mb_hr_prev_slope)) / smoothing_scale;
+        slope = (beta * (smooth_pa - G_vario.mb_hr_prev_pa) + (smoothing_scale - beta) * G_vario.mb_hr_prev_slope) / smoothing_scale;
         
         G_vario.mb_hr_prev_pa = smooth_pa;
         G_vario.mb_hr_prev_slope = slope;
-        G_vario.mb_hr_rate = slope * 36;
+        G_vario.mb_hr_rate = (slope * 3600) / pressure_scale;
 #endif
 
 #if VARIO_ALTMAX
