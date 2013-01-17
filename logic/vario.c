@@ -114,8 +114,8 @@ struct
      } stats;
 } G_vario;
 
-const int alpha = 10; // / 100 = 0.1
-const int beta = 2;   // / 100 = 0.02
+const int alpha = 20;  // / 100 = 0.1
+const int beta = 20;   // / 100 = 0.02
 //
 // Note the beepmode enum changes are reflected in the beepmode symbol.
 // For visual feedback during settings, the beeper2 symbol is turned on
